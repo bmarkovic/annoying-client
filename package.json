@@ -1,0 +1,22 @@
+{
+  "name": "annoying_client",
+  "version": "0.1.0",
+  "description": "Annoying HTTP client, instead of load testing it tries to emulate users over a long period of time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bojan Markovic <bmarkovic.79@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-basic-auth": "^1.1.4",
+    "got": "^8.3.0",
+    "lodash": "^4.17.5",
+    "url-join": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.15.1"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "httpPort": 9900,
+  "baseUrl": "http://127.0.0.1/root_path",
+  "paralel": 1,
+  "interval": 1000,
+  "index_pct": 50,
+  "index": "/",
+  "otherUris": [
+    "first",
+    "second",
+    "deep/one",
+    "query?q=foo"
+  ],
+  "localAddresses": [
+    "127.0.0.1",
+    "127.0.0.2",
+    "127.0.0.3",
+  ],
+  "clientAuth": {
+    "username": "annoying",
+    "password": "test"
+  },
+  "username": "annoying",
+  "password": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+}
