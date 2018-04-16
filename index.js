@@ -13,6 +13,16 @@ const _ = require('lodash')
 
 const btoa = str => Buffer.from(str).toString('base64')
 
+/**
+ * Promisifies fs.readFile
+ */
+const readFile = (filepath) => new Promise((resolve, reject) => {
+  fs.readFile(filepath, 'utf8', (err, data) => {
+    if (err) reject(err)
+    else resolve(String(data))
+  })
+})
+
 // Default configuration to be overriden by conf file or with PUT /config
 const defaultConfig = {
   // HTTP listening port
@@ -96,12 +106,21 @@ function authorizer (username, password) {
 
 // load config filie and merge configurations
 function getConfig(defaultConfig) {
-  let name = 'config.json'
+  let arg = process.argv[2]
+
+  if (arg && !arg.endsWith('json')) {
+    console.error(
+      'ERROR: Supplied argument is not a JSON file. ' +
+      'Continuing with default config.'
+    )
+  }
+
+  let name = arg || 'config.json'
   let found = false
   let files = []
   let userConfig = {}
 
-  const paths = [ './', '../' ]
+  const paths = [ './', '../', '' ]
   paths.forEach(pathlet => {
     files.push( path.resolve(pathlet, name) )
   })
@@ -109,10 +128,21 @@ function getConfig(defaultConfig) {
   files.forEach(file => {
     if (!found && fs.existsSync(file)) {
       userConfig = require(file)
-      found = true
+      if ((userConfig instanceof Object) && (Object.keys(userConfig).length > 0)) {
+        console.log(`ENV Using configuration from file ${file}`)
+        found = true
+      } else {
+        userConfig = {}
+      }
     }
   })
 
+  if (!found) {
+    console.error(
+      `ERROR: ${name} is not a proper config file. ` +
+      'Continuing with default config.'
+    )
+  }
   return _.merge(defaultConfig, userConfig)
 }
 
@@ -129,7 +159,7 @@ function getBaseUrl(baseUrlString) {
 // pretty print progress in debug mode
 /* eslint-disable */
 function printProgress(progress) {
-  process.stdout.write('\0' + '33c')
+  process.stdout.write('\033c')
   process.stdout.cursorTo(0,0)
   process.stdout.write(progress)
 }
