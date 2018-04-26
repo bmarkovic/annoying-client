@@ -1,8 +1,8 @@
 # Annoying Client
 
-Version 0.1.0
-2018 Bojan Markovic
-bmarkovic.79@gmail.com
+Version 0.1.0  
+2018 Bojan Markovic  
+bmarkovic.79@gmail.com  
 
 **Annoying Client** is a HTTP client designed to emulate potentially infinitely
 long constant "pressure" to website. This is in contrast to tools like `ab` or
@@ -18,6 +18,20 @@ and `cron`, I was unable to find a solution for my specific use-case of
 generating constant traffic on a web server appearing to come from multiple
 clients and observing results in real time..
 
+## Installation
+
+Requires Node.js 8 or newer. The installation is typical one for Node.js based 
+software:
+
+    $ git clone https://github.com/bmarkovic/annoying-client.git
+    $ cd annoying-client
+    $ npm install
+
+And then you start it with `node .` in the `annoying-client` directory.
+
+> Note: It was tested only on Linux and at the very least the **tui** mode 
+  (see below) is not very likely to work on Windows.
+
 ## Configuration
 
 The configuration should be in the `config.json` file in the same directory.
@@ -28,7 +42,6 @@ don't exist in the default config):
 
 ```javascript
 {
-const defaultConfig = {
   // HTTP listening port
   httpPort: 9900,
   // Base URL for performed requests
@@ -72,7 +85,6 @@ const defaultConfig = {
   password: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
   // the one above is 'test'
 }
-}
 ```
 
 The actual configuration must be in proper JSON format (quoted keys, no
@@ -93,7 +105,27 @@ watch to monitor in real time e.g.
 
     $ watch 'curl -s localhost:9900'
 
-## Development optins
+## Advanced usage
 
-Setting DEBUG to any "truthy" value will cause a special "tui" mode to be
-engaged where the terminal is cleared every interval with updated stats.
+If you want test traffic to appear comming from multiple (loooback) addresses
+you can do so by creating a script that lifts loopback addresses before it
+starts the Annoying Client:
+
+```bash
+#!/bin/bash
+
+ifconfig lo:1 127.0.0.2 up
+ifconfig lo:2 127.0.0.3 up
+ifconfig lo:3 127.0.0.4 up
+ifconfig lo:4 127.0.0.5 up
+# ... add as many as you need
+
+cd annoying-client
+node .
+```
+
+Another helpful option would be setting DEBUG to any "truthy" value. This will 
+cause a special "tui" mode to be activated where the terminal is cleared every
+interval with updated stats. E.g.:
+
+    $ DEBUG=1 node .
